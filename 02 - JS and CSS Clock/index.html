@@ -7,9 +7,9 @@
   <body>
     <div class="clock">
       <div class="clock-face">
-        <div class="hand hour-hand"></div>
+        <!-- <div class="hand hour-hand"></div>
         <div class="hand minute-hand"></div>
-        <div class="hand second-hand"></div>
+        <div class="hand second-hand"></div> -->
       </div>
     </div>
 
@@ -67,41 +67,66 @@
     </style>
 
     <script>
-      const secondHand = document.querySelector(".second-hand");
-      const minuteHand = document.querySelector(".minute-hand");
-      const hourHand = document.querySelector(".hour-hand");
+      document.body.onload = () => {
+        var foo = (() => {
+          const _hourHand = document.createElement("div");
+          _hourHand.className = "hand hour-hand";
+          const _minuteHand = document.createElement("div");
+          _minuteHand.className = "hand minute-hand";
+          const _secondHand = document.createElement("div");
+          _secondHand.className = "hand second-hand";
+          const clockFace = document.querySelector(".clock-face");
+          _secondHand.style.transitionProperty = `none`;
+          _minuteHand.style.transitionProperty = `none`;
+          _hourHand.style.transitionProperty = `none`;
+          setDate([_hourHand, _minuteHand, _secondHand]);
 
-      secondHand.style.transitionProperty = `none`;
-      minuteHand.style.transitionProperty = `none`;
-      hourHand.style.transitionProperty = `none`;
+          clockFace.appendChild(_hourHand);
+          clockFace.appendChild(_minuteHand);
+          clockFace.appendChild(_secondHand);
 
-      function tick(el, degrees) {
-        if (degrees === 90) {
-          el.style.transitionProperty = `none`;
-        } else {
-          el.style.transitionProperty = `all`;
-        }
+          const secondHand = document.querySelector(".second-hand");
+          const minuteHand = document.querySelector(".minute-hand");
+          const hourHand = document.querySelector(".hour-hand");
 
-        el.style.transform = `rotate(${degrees}deg)`;
-      }
+          secondHand.style.transitionProperty = `none`;
+          minuteHand.style.transitionProperty = `none`;
+          hourHand.style.transitionProperty = `none`;
 
-      function setDate() {
-        const now = new Date();
-        const seconds = now.getSeconds();
-        const minutes = now.getMinutes();
-        const hours = now.getHours();
+          function tick(el, degrees) {
+            if (degrees === 90) {
+              el.style.transitionProperty = `none`;
+            } else {
+              el.style.transitionProperty = `all`;
+            }
 
-        const secondDegrees = (seconds / 60) * 360 + 90;
-        tick(secondHand, secondDegrees);
+            el.style.transform = `rotate(${degrees}deg)`;
+          }
 
-        const minuteDegrees = (minutes / 60) * 360 + 90;
-        tick(minuteHand, minuteDegrees);
+          function setDate(hands) {
+            const [secondHand, minuteHand, hourHand] = hands;
+            const now = new Date();
+            const seconds = now.getSeconds();
+            const minutes = now.getMinutes();
+            const hours = now.getHours();
 
-        const hourDegrees = (hours / 12) * 360 + 90;
-        tick(hourHand, hourDegrees);
-      }
+            const secondDegrees = (seconds / 60) * 360 + 90;
+            tick(secondHand, secondDegrees);
 
-      const id = setInterval(setDate, 1000);
+            const minuteDegrees = (minutes / 60) * 360 + 90;
+            tick(minuteHand, minuteDegrees);
+
+            const hourDegrees = (hours / 12) * 360 + 90;
+            tick(hourHand, hourDegrees);
+          }
+
+          return () => {
+            setDate([_secondHand, _minuteHand, _hourHand]);
+          };
+        })();
+
+        setInterval(foo, 1000);
+      };
     </script>
   </body>
 </html>
